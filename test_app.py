@@ -4,6 +4,10 @@ from util import make_link, make_lines
 import connect_database
 
 app = Flask(__name__)
+
+if connect_database.config['overwrite']['setup again'] == "True":
+    import setup
+
 db = connect_database.get_db()
 
 @app.route('/')

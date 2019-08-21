@@ -1,9 +1,15 @@
 import os
 from sqlalchemy import create_engine
+from flask import url_for
 from sqlalchemy.orm import scoped_session, sessionmaker
 from configparser import ConfigParser
+from pathlib import Path
 config = ConfigParser()
-config.read('config.ini')
+
+path = Path('config.ini').absolute()
+print(path)
+config.read(path)
+print(config.sections())
 
 def get_db(database_url=None):
     if not database_url:

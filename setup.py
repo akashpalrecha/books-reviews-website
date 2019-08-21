@@ -7,10 +7,7 @@ from util import populate_books_table
 
 import connect_database
 
-from configparser import ConfigParser
-
-config = ConfigParser()
-config.read('config.ini')
+config = connect_database.config
 
 database_url = os.environ.get('DATABASE_URL', -1)
 if database_url == -1:
@@ -67,4 +64,5 @@ if config['overwrite']['reviews_table_modify'] == 'True':
     sql(config['queries']['create reviews'], db=db)
 
 ## Rewrite Config.ini
+config['overwrite']['setup again'] = "False"
 config.write(open('config.ini', mode='w'))
