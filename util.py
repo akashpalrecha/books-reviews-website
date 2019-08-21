@@ -19,9 +19,11 @@ def make_lines(lines: list, link=True):
             response += str(line) + "<br>"
         return response
 
+
 def make_link(line):
     """ Returns HTML for 'line' rendered as a LINK"""
     return f"<a href='{line}'>{line}</a>"
+
 
 def add_user(email:str, password:str, db:scoped_session=db):
     """ Adds a USER to the Database """
@@ -93,6 +95,7 @@ def escape_sql_characters(q):
         else: new += c
     return new
 
+
 def escape_list(queries):
     """ Applies escape_sql_characters to all strings in the list of queries and returns another list """
     if type(queries) != list:
@@ -102,3 +105,30 @@ def escape_list(queries):
         for q in queries:
             new.append(escape_sql_characters(q))
         return new
+
+
+def populate_books_table(db=db, data_path='books.csv'):
+    # Good progress bars
+    try:
+        __IPYTHON__
+        from tqdm import tqdm_notebook as tqdm
+    except NameError:
+        from tqdm import tqdm as tqdm
+
+    import pandas as pd
+    if not table_exists('books', db=db):
+        sql(connect_database.config['queries']['create books'], rollback=True, db=db)
+    sql(connect_database.config['queries']['clear books'], rollback=True)
+    data = pd.read_csv(data_path)
+    db.rollback()
+    for i in tqdm(range(len(data))):
+        book = data.iloc[i]
+        isbn, title, author, year = escape_list(list(book))
+        #     set_trace()
+        query = f"INSERT INTO books(isbn, title, author, year)" + \
+                f""" VALUES ('{isbn}', '{title}', '{author}', '{year}')"""
+        db.execute(query)
+
+    db.commit()
+
+    print("Successful")
