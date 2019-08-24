@@ -14,4 +14,14 @@
   width: 2.5in;
 }
 
+.search-col {
+  background-color: #f0f0f0;
+  margin: 10px;
+  border-radius: 15px;
+}
+
+.search-result {
+  margin: 0.7cm;
+}
+
 /*# sourceMappingURL=style.css.map */

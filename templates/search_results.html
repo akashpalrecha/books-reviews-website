@@ -1,0 +1,20 @@
+{% extends "base_template.html" %}
+
+{% block body %}
+<div class="container search-container">
+    <div class="row search-row justify-content-center">
+        {% for book in results %}
+        <div class="col-lg-3 col-md-5 col-sm-6 col-8 search-col ">
+            <div class="search-result">
+            <strong>Title:</strong> {{ book[1] }} <br>
+            <strong>Author:</strong> {{ book[2] }} <br>
+            <strong>Year:</strong> {{ book[3] }} <br>
+            <strong>ISBN:</strong> {{ book[0] }} <br>
+            <strong>Number of reviews:</strong> {{ book[4] }} <br>
+            <strong>Average Score:</strong> {{ book[5] }} <br>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

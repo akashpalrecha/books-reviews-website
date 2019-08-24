@@ -1,4 +1,7 @@
 $form-btn-size: 2.5in;
+$sm: 576px;
+$lg: 768px;
+$xl: 1200px;
 
 .login-input{
   width: $form-btn-size;
@@ -14,4 +17,25 @@ $form-btn-size: 2.5in;
 
 .login-submit-button{
   width: $form-btn-size;
+}
+
+.search-container{
+  //border: 2px solid red;
+}
+
+.search-row{
+  //border: 2px solid blue;
+}
+
+.search-col{
+  background-color: #f0f0f0;
+  margin: 10px;
+  //width: 100px;
+  //height: 250px;
+  border-radius: 15px;
+  //border: 2px solid green;
+}
+
+.search-result{
+  margin: 0.7cm;
 }

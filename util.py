@@ -4,6 +4,7 @@ Contains helper functions for the web app.
 from sqlalchemy.orm import scoped_session
 from pathlib import Path
 import connect_database
+import requests
 db = connect_database.get_db()
 
 def make_lines(lines: list, link=True):
@@ -144,14 +145,27 @@ def get_password(email, db:scoped_session=db):
 
 
 def search_in_books(search:str, db:scoped_session=db):
-    query1 = f"SELECT isbn FROM books WHERE title LIKE '%{search}%'"
-    query2 = f"SELECT isbn FROM books WHERE isbn LIKE '%{search}%'"
-    query3 = f"SELECT isbn FROM books WHERE author LIKE '%{search}%'"
+    query1 = f"SELECT * FROM books WHERE title LIKE '%{search}%'"
+    query2 = f"SELECT * FROM books WHERE isbn LIKE '%{search}%'"
+    query3 = f"SELECT * FROM books WHERE author LIKE '%{search}%'"
     r1 = sql(query=query1, db=db, fetch=True, rollback=True)
     r2 = sql(query=query2, db=db, fetch=True, rollback=True)
     r3 = sql(query=query3, db=db, fetch=True, rollback=True)
-    return process_sql_list_result(r1 + r2 + r3)
+    res = r1 + r2 + r3
+    for i, book in enumerate(res):
+        response = get_from_goodreads(book[0])['books'][0]
+        book = tuple(book) + (response['reviews_count'], response['average_rating'])
+        res[i] = book
+    return res
+
 
 
 def process_sql_list_result(result:list):
     return [o[0] for o in result]
+
+
+def get_from_goodreads(isbn:str) -> dict:
+    KEY = connect_database.config['DEFAULT']['Goodreads API Key']
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                       params={"key": KEY, "isbns": str(isbn)}).json()
+    return res

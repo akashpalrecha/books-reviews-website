@@ -130,4 +130,13 @@ def home_books():
 def search_books():
     search = request.form.get('search')
     results = search_in_books(search)
-    return ' '.join(results)
+    return render_template('search_results.html', results=results,
+                           review_count=10, average_score=4,
+                           nav_1="Logout", nav_1_link="logout",
+                           nav_2="Search", nav_2_link="home_books")
+
+@app.route('/random_page')
+def random_page():
+    return render_template('search_results.html',
+                           nav_1="Logout", nav_1_link="logout",
+                           nav_2="Search", nav_2_link="home_books")
