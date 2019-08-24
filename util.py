@@ -135,3 +135,23 @@ def populate_books_table(db:scoped_session=db, data_path='books.csv'):
     db.commit()
 
     print("Successful")
+
+
+def get_password(email, db:scoped_session=db):
+    passwd_query = f"SELECT password FROM user_data WHERE email='{email}'"
+    password = sql(passwd_query, db=db, rollback=True, fetch=True)
+    return password
+
+
+def search_in_books(search:str, db:scoped_session=db):
+    query1 = f"SELECT isbn FROM books WHERE title LIKE '%{search}%'"
+    query2 = f"SELECT isbn FROM books WHERE isbn LIKE '%{search}%'"
+    query3 = f"SELECT isbn FROM books WHERE author LIKE '%{search}%'"
+    r1 = sql(query=query1, db=db, fetch=True, rollback=True)
+    r2 = sql(query=query2, db=db, fetch=True, rollback=True)
+    r3 = sql(query=query3, db=db, fetch=True, rollback=True)
+    return process_sql_list_result(r1 + r2 + r3)
+
+
+def process_sql_list_result(result:list):
+    return [o[0] for o in result]
