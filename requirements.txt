@@ -2,3 +2,5 @@ Flask
 Flask-Session
 psycopg2
 SQLAlchemy
+requests
+cerberus==1.3.1

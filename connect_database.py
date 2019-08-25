@@ -1,6 +1,5 @@
 import os
 from sqlalchemy import create_engine
-from flask import url_for
 from sqlalchemy.orm import scoped_session, sessionmaker
 from configparser import ConfigParser
 from pathlib import Path
