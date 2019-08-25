@@ -18,7 +18,7 @@ if connect_database.config['overwrite']['setup again'] == "True":
 db = connect_database.get_db()
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
     if session.get('username', -1) != -1:
         return redirect(url_for('home_books'))
