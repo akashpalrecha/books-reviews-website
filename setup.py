@@ -47,7 +47,7 @@ if config['overwrite']['books_table_modify'] == "True":
         sql(config['queries']['drop books'], rollback=True)
     sql(config['queries']['create books'], db=db)
 
-if config['overwrite']['books_table_modify'] == 'True' or config['DEFAULTS']['import books'] == 'True':
+if config['overwrite']['books_table_modify'] == 'True' or config['DEFAULT']['import books'] == 'True':
     sql(config['queries']['clear books'])
     populate_books_table(db=db)
 

@@ -4,14 +4,16 @@
 <div class="container search-container">
     <div class="row search-row justify-content-center">
         {% for book in results %}
-        <div class="col-lg-3 col-md-5 col-sm-6 col-8 search-col ">
-            <div class="search-result">
-            <strong>Title:</strong> {{ book[1] }} <br>
-            <strong>Author:</strong> {{ book[2] }} <br>
-            <strong>Year:</strong> {{ book[3] }} <br>
-            <strong>ISBN:</strong> {{ book[0] }} <br>
-            <strong>Number of reviews:</strong> {{ book[4] }} <br>
-            <strong>Average Score:</strong> {{ book[5] }} <br>
+        <div class="col-lg-4 col-md-5 col-sm-6 col-8  mb-3">
+            <div class="card">
+              <div class="card-header">
+                {{ book[2] }}, {{ book[3] }}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ book[1] }}</h5>
+                <p class="card-text">ISBN : {{ book[0] }}</p>
+                <a href="{{ url_for('display_book', isbn=book[0]) }}" class="btn btn-primary">Go to book page</a>
+              </div>
             </div>
         </div>
         {% endfor %}

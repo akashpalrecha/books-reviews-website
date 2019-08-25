@@ -1,6 +1,6 @@
-from flask import Flask, session, escape, url_for, render_template, request, redirect
+from flask import Flask, session, escape, url_for, render_template, request, redirect, jsonify
 from cerberus import Validator
-from util import make_link, make_lines, sql, get_password, search_in_books
+from util import make_lines, sql, get_password, search_in_books, write_review, get_reviews
 import connect_database
 db = connect_database.get_db()
 app = Flask(__name__)
@@ -135,8 +135,52 @@ def search_books():
                            nav_1="Logout", nav_1_link="logout",
                            nav_2="Search", nav_2_link="home_books")
 
+
+@app.route('/submit_review/<string:isbn>', methods=['POST'])
+def submit_review(isbn: str):
+    if session.get('username', -1) == -1:
+        return escape("Please login to access this page")
+
+    username = session.get('username')
+    title = search_in_books(isbn)[0][1]
+    review = request.form.get('review')
+    rating = request.form.get('book-rating')
+    # validate rating:
+    if rating not in ['1','2','3','4','5']:
+        rating = '1'
+    write_review(isbn, username, title, review, rating, db=db)
+    return redirect(url_for('display_book', isbn=isbn))
+
+@app.route('/display_book/<string:isbn>')
+def display_book(isbn: str):
+    if session.get('username', -1) == -1:
+        return escape("Please login to access this page")
+
+    username = session.get('username')
+    book = search_in_books(isbn)[0]
+
+    reviews = get_reviews(isbn, db=db)
+    return render_template('display_book.html', book=book, reviews=reviews,
+                           nav_1="Logout", nav_1_link="logout",
+                           nav_2="Search", nav_2_link="home_books")
+
+
+@app.route('/api/<string:isbn>', methods=["GET"])
+def api(isbn:str):
+    book = search_in_books(isbn)[0]
+    res = {'title': book[1],
+           'author': book[2],
+           'year': book[3],
+           'isbn': book[0],
+           'review_count': book[4],
+           'average_score': book[5]
+           }
+    return jsonify(res)
+
+
 @app.route('/random_page')
 def random_page():
-    return render_template('search_results.html',
+    book = ('0380795272', 'Krondor: The Betrayal', 'Raymond E. Feist', '1998', '1434', '4.4')
+    return render_template('display_book.html', book=book,
                            nav_1="Logout", nav_1_link="logout",
                            nav_2="Search", nav_2_link="home_books")

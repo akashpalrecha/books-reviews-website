@@ -159,7 +159,6 @@ def search_in_books(search:str, db:scoped_session=db):
     return res
 
 
-
 def process_sql_list_result(result:list):
     return [o[0] for o in result]
 
@@ -169,3 +168,14 @@ def get_from_goodreads(isbn:str) -> dict:
     res = requests.get("https://www.goodreads.com/book/review_counts.json",
                        params={"key": KEY, "isbns": str(isbn)}).json()
     return res
+
+
+def write_review(isbn:str, username:str, title:str, review:str, rating:str, db:scoped_session=db):
+    query = f"INSERT INTO reviews (isbn, username, title, review, rating) VALUES ('{isbn}', '{username}', '{title}', '{review}', '{rating}')"
+    sql(query=query, db=db, rollback=True)
+    print(query)
+
+
+def get_reviews(isbn:str, db:scoped_session=db):
+    query = f"SELECT * FROM reviews WHERE isbn = '{isbn}'"
+    return sql(query, db=db, fetch=True, rollback=True)
