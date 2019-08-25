@@ -8,4 +8,3 @@ configparser
 pathlib
 tqdm
 pandas
-os
