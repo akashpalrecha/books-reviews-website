@@ -171,6 +171,7 @@ def get_from_goodreads(isbn:str) -> dict:
 
 
 def write_review(isbn:str, username:str, title:str, review:str, rating:str, db:scoped_session=db):
+    isbn, username, title, review = escape_list([isbn, username, title, review])
     query = f"INSERT INTO reviews (isbn, username, title, review, rating) VALUES ('{isbn}', '{username}', '{title}', '{review}', '{rating}')"
     sql(query=query, db=db, rollback=True)
     print(query)
