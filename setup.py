@@ -16,6 +16,7 @@ tables['db config'] = table_exists(config['DEFAULT']['db config table'], db)
 tables['books'] = table_exists(config['DEFAULT']['books table'], db)
 tables['users'] = table_exists(config['DEFAULT']['users table'], db)
 tables['reviews'] = table_exists(config['DEFAULT']['reviews table'], db)
+print(tables)
 
 if not tables['db config']:
     config['overwrite']['db_config_modify'] = "True"
@@ -25,6 +26,7 @@ if not tables['books']:
 if not tables['users']: config['overwrite']['user_table_modify'] = "True"
 if not tables['reviews']: config['overwrite']['reviews_table_modify'] = "True"
 
+print(dict(config['overwrite']))
 print("Decisions made.\nWorking on:")
 # Creating tables one by one
 # db config
